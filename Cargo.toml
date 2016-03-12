@@ -3,5 +3,5 @@ name = "coroutine-test"
 version = "0.1.0"
 authors = ["Dylan Johnson <dgj16@cs.washington.edu>"]
 
-[dependencies]
-coroutine = "0.3.2"
+[dependencies.coroutine]
+git = "https://github.com/rustcc/coroutine-rs.git"
