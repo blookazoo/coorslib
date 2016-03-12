@@ -1,7 +1,28 @@
 [package]
-name = "coroutine-test"
-version = "0.1.0"
-authors = ["Dylan Johnson <dgj16@cs.washington.edu>"]
+name = "coorslib"
+version = "0.4.0"
+authors = [
+    "Kevin Chang",
+    "Dylan Johnson",
+    "Artem Minyaylov"
+]
+repository = "https://github.com/artemvm/coorslib.git"
+description = "Coroutine Library in Rust"
+readme = "README.md"
+homepage = "https://github.com/artemvm/coorslib.git"
+keywords = ["coroutine", "green", "thread", "fiber", "symmetric"]
 
-[dependencies.coroutine]
-git = "https://github.com/rustcc/coroutine-rs.git"
+[build-dependencies]
+gcc = "*"
+log = "*"
+
+[lib]
+name = "coroutine"
+path = "src/lib.rs"
+
+[dependencies]
+libc = "^0.1.10"
+context = "0.1.2"
+
+[dev-dependencies]
+num_cpus = "*"
