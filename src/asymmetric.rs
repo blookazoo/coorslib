@@ -181,6 +181,7 @@ pub struct Coroutine<T>
 impl<T> fmt::Debug for Coroutine<T>
     where T: Send,
 {
+    
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self.coro.get())
     }
@@ -303,6 +304,13 @@ impl<T> Coroutine<T>
     pub fn resume_with(&self, data: T) -> ::Result<Option<T>> {
         unsafe {
             (&mut *self.coro.get()).resume_with(data)
+        }
+    }
+ 
+    #[inline]
+    pub fn yield_back(&self) {
+        unsafe {
+            (&mut *self.coro.get()).yield_back();
         }
     }
 }

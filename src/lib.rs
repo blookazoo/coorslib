@@ -26,6 +26,7 @@ use std::fmt::{self, Display};
 pub use options::Options;
 
 pub mod asymmetric;
+pub mod symmetric;
 pub mod options;
 
 /// Return type of resuming. Ok if resume successfully with the current state,

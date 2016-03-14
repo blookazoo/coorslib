@@ -1,6 +1,6 @@
-extern crate coroutine;
+extern crate coorslib;
 
-use coroutine::asymmetric::Coroutine;
+use coorslib::asymmetric::Coroutine;
 
 fn main() {
     let coro: Coroutine<i32> = Coroutine::spawn(|me| {

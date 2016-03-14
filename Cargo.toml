@@ -17,7 +17,7 @@ gcc = "*"
 log = "*"
 
 [lib]
-name = "coroutine"
+name = "coorslib"
 path = "src/lib.rs"
 
 [dependencies]
