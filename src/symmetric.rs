@@ -4,7 +4,7 @@ use std::vec::Vec;
 struct Coors {
     current: i32,
     next: i32,
-    coroutines: Option<Vec<asymmetric::Coroutine<()>>>,
+    coroutines: Vec<asymmetric::Coroutine<()>>,
 }
 
 impl Coors {
@@ -12,39 +12,42 @@ impl Coors {
         Coors {
             current: -1,
             next: -1,
-            coroutines: None,
+            coroutines: Vec::new(),
         }
     }
 
     pub fn set_coroutines(&mut self, coroutines: Vec<asymmetric::Coroutine<()>>) {
-       self.coroutines = Some(coroutines);
+       self.coroutines = coroutines;
     }
 
     pub fn yield_to(&mut self, co: i32) {
         self.next = co;
-        self.coroutines.take().unwrap().get(self.current as usize)
-            .unwrap().yield_back();
+        self.coroutines
+            .get(self.current as usize)
+            .unwrap()
+            .yield_with(());
     }
     
     pub fn start(&mut self, co: i32) {
-        match self.coroutines {
-            // TODO: error?
-            None => return,
-            Some(_) => {},
-        }
         self.current = co; 
         while self.current != -1 {
-            self.coroutines.take().unwrap().get(self.current as usize)
-                .unwrap().resume().unwrap().unwrap();
-            self.current = self.next
+            self.coroutines
+                .get(self.current as usize)
+                .unwrap()
+                .resume()
+                .unwrap()
+                .unwrap();
+            self.current = self.next;
         }
     }
 
     // TODO: Remove stop?
     pub fn stop(&mut self) {
         self.next = -1;
-        self.coroutines.take().unwrap().get(self.current as usize)
-            .unwrap().yield_back();
+        self.coroutines
+            .get(self.current as usize)
+            .unwrap()
+            .yield_with(());
     }
 }
 
@@ -56,7 +59,7 @@ mod test {
     use std::vec::Vec;
 
     #[test]
-    fn test_asymmetric_basic() {
+    fn test_my_balls() {
         let coro = asymmetric::Coroutine::spawn(|me| {
             for i in 0..10 {
                 me.yield_with(i);
@@ -74,13 +77,21 @@ mod test {
         let mut coroutines: Vec<asymmetric::Coroutine<()>> = Vec::new();
         let coro_1 = asymmetric::Coroutine::spawn(|me| {
             for i in 0..10 {
-                // println!("{}", i);
-                coors.yield_to(0);
+                println!("{}", i);
+                coors.yield_to(1);
             }
             coors.stop();
         });
 
+        let coro_2 = asymmetric::Coroutine::spawn(|me| {
+            for i in 10..20 {
+                println!("{}", i);
+                coors.yield_to(0);
+            }
+        });
+
         coroutines.push(coro_1);
+        coroutines.push(coro_2);
         coors.set_coroutines(coroutines);
 
         coors.start(0);

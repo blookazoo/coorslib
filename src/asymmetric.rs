@@ -308,9 +308,9 @@ impl<T> Coroutine<T>
     }
  
     #[inline]
-    pub fn yield_back(&self) {
+    pub fn yield_with(&self, data: T) {
         unsafe {
-            (&mut *self.coro.get()).yield_back();
+            (&mut *self.coro.get()).yield_with(data);
         }
     }
 }
