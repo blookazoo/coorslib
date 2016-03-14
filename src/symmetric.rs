@@ -1,7 +1,6 @@
 use asymmetric;
-use std::vec::Vec;
 
-struct Coors {
+pub struct Coors {
     current: i32,
     next: i32,
     coroutines: Vec<asymmetric::Coroutine<()>>,
