@@ -1,73 +1,79 @@
-# coroutine-rs
+# Coors Lib
 
-[![Build Status](https://img.shields.io/travis/rustcc/coroutine-rs.svg)](https://travis-ci.org/rustcc/coroutine-rs) [![crates.io](https://img.shields.io/crates/v/coroutine.svg)](https://crates.io/crates/coroutine) [![crates.io](https://img.shields.io/crates/l/coroutine.svg)](https://crates.io/crates/coroutine)
-
-Coroutine library in Rust
+Symmetric coroutine library in Rust
 
 ```toml
-[dependencies.coroutine]
-git = "https://github.com/rustcc/coroutine-rs.git"
+[dependencies.coorslib]
+git = "https://github.com/artemvm/coorslib.git"
 ```
 
 ## Usage
 
-Basic usage of Coroutine
+Basic usage of symmetric coroutine
 
 ```rust
-extern crate coroutine;
+extern crate coorslib;
 
-use coroutine::asymmetric::Coroutine;
+use coorslib::symmetric::*;
 
 fn main() {
-    let coro: Coroutine<i32> = Coroutine::spawn(|me| {
-        for num in 0..10 {
-            me.yield_with(num);
-        }
+    let mut coors = Coors::new();
+    let mut coroutines = Vec::new();
+
+    let coro_1 = Coroutine::spawn(|arg| {
+        println!("{}", arg.unwrap());
+        println!("{}", coors.yield_to(NEXT, "yay").unwrap());
+        coors.yield_to(NEXT, "back");
     });
 
-    for num in coro {
-        println!("{}", num.unwrap());
-    }
+    let coro_2 = Coroutine::spawn(|arg| {
+        println!("{}", arg.unwrap());
+        println!("{}", coors.yield_to(NEXT, "mlem").unwrap());
+        coors.stop("returning");
+    });
+
+    coroutines.push(coro_1);
+    coroutines.push(coro_2);
+    coors.set_coroutines(coroutines);
+    println!("{}", coors.start(FIRST, "starting").unwrap());
 }
 ```
 
 This program will print the following to the console
 
 ```
-0
-1
-2
-3
-4
-5
-6
-7
-8
-9
+starting
+yay
+mlem
+back
+returning
 ```
 
-For more detail, please run `cargo doc --open`.
+# Installation
 
-## Goals
+* Download Coorslib
+    - git clone https://github.com/artemvm/coorslib.git 
 
-- [x] Basic single threaded coroutine support
+* Install multirust (for nightly)
+    - curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
+    
+* Switch to nightly 2015-09-29
+    - make sure you are in the directory of Coors Lib (should see Cargo.toml)
+    - multirust override multirust override nightly-2015-09-29
+    
+* Run tests
+    - make sure you are in the directory of Coors Lib
+    - cargo test
 
-- [x] Asymmetric Coroutines
+# Uninstallation
 
-- [ ] Symmetric Coroutines
+* Uninstall multirust
+    - curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh -s -- --uninstall
 
-- [ ] Thread-safe: can only resume a coroutine in one thread simultaneously
-
-## Notes
+# Notes
 
 * Currently this crate **can only** be built with Rust nightly because of some unstable features.
 
 * Basically it supports arm, i686, mips, mipsel and x86_64 platforms, but we have only tested in
-
     - OS X 10.10.*, x86_64, nightly
-
     - ArchLinux, x86_64, nightly
-
-## Thanks
-
-- The Rust developers (context switch ASM from libgreen)
