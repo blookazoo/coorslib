@@ -52,23 +52,23 @@ returning
 # Installation
 
 * Download Coorslib
-    - git clone https://github.com/artemvm/coorslib.git 
+    - $ git clone https://github.com/artemvm/coorslib.git 
 
 * Install multirust (for nightly)
-    - curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
+    - $ curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
     
 * Switch to nightly 2015-09-29
     - make sure you are in the directory of Coors Lib (should see Cargo.toml)
-    - multirust override multirust override nightly-2015-09-29
+    - $ multirust override nightly-2015-09-29
     
 * Run tests
     - make sure you are in the directory of Coors Lib
-    - cargo test
+    - $ cargo test
 
 # Uninstallation
 
 * Uninstall multirust
-    - curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh -s -- --uninstall
+    - $ curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh -s -- --uninstall
 
 # Notes
 
