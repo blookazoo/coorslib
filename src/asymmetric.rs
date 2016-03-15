@@ -38,7 +38,7 @@ use context::stack::{Stack, StackPool};
 use options::Options;
 
 // Catch panics inside coroutines
-unsafe fn try<R, F: FnOnce() -> R>(f: F) -> thread::Result<R> {
+pub unsafe fn try<R, F: FnOnce() -> R>(f: F) -> thread::Result<R> {
     let mut f = Some(f);
     let f = &mut f as *mut Option<F> as usize;
     thread::catch_panic(move || {
@@ -47,12 +47,12 @@ unsafe fn try<R, F: FnOnce() -> R>(f: F) -> thread::Result<R> {
 }
 
 
-thread_local!(static STACK_POOL: UnsafeCell<StackPool> = UnsafeCell::new(StackPool::new()));
+thread_local!(pub static STACK_POOL: UnsafeCell<StackPool> = UnsafeCell::new(StackPool::new()));
 
-struct ForceUnwind;
+pub struct ForceUnwind;
 
 /// Initialization function for make context
-extern "C" fn coroutine_initialize(_: usize, f: *mut libc::c_void) -> ! {
+pub extern "C" fn coroutine_initialize(_: usize, f: *mut libc::c_void) -> ! {
     {
         let func: Box<Box<FnBox()>> = unsafe {
             Box::from_raw(f as *mut Box<FnBox()>)
@@ -65,7 +65,7 @@ extern "C" fn coroutine_initialize(_: usize, f: *mut libc::c_void) -> ! {
 }
 
 #[derive(Debug, Copy, Clone)]
-enum State {
+pub enum State {
     Created,
     Running,
     Finished,
@@ -74,17 +74,17 @@ enum State {
 
 #[allow(raw_pointer_derive)]
 #[derive(Debug)]
-struct CoroutineImpl<T = ()>
+pub struct CoroutineImpl<T = ()>
     where T: Send
 {
-    parent: Context,
-    context: Context,
-    stack: Option<Stack>,
+    pub parent: Context,
+    pub context: Context,
+    pub stack: Option<Stack>,
 
-    name: Option<String>,
-    state: State,
+    pub name: Option<String>,
+    pub state: State,
 
-    result: Option<::Result<*mut Option<T>>>,
+    pub result: Option<::Result<*mut Option<T>>>,
 }
 
 unsafe impl<T> Send for CoroutineImpl<T>
@@ -104,7 +104,7 @@ impl<T> fmt::Display for CoroutineImpl<T>
 impl<T> CoroutineImpl<T>
     where T: Send,
 {
-    unsafe fn yield_back(&mut self) -> Option<T> {
+    pub unsafe fn yield_back(&mut self) -> Option<T> {
         Context::swap(&mut self.context, &self.parent);
 
         if let State::ForceUnwind = self.state {
@@ -118,7 +118,7 @@ impl<T> CoroutineImpl<T>
         }
     }
 
-    unsafe fn resume(&mut self) -> ::Result<Option<T>> {
+    pub unsafe fn resume(&mut self) -> ::Result<Option<T>> {
         Context::swap(&mut self.parent, &self.context);
         match self.result.take() {
             None => Ok(None),
@@ -139,17 +139,17 @@ impl<T> CoroutineImpl<T>
         }
     }
 
-    unsafe fn yield_with(&mut self, data: T) -> Option<T> {
+    pub unsafe fn yield_with(&mut self, data: T) -> Option<T> {
         self.result = Some(Ok(&mut Some(data)));
         self.yield_back()
     }
 
-    unsafe fn resume_with(&mut self, data: T) -> ::Result<Option<T>> {
+    pub unsafe fn resume_with(&mut self, data: T) -> ::Result<Option<T>> {
         self.result = Some(Ok(&mut Some(data)));
         self.resume()
     }
 
-    unsafe fn force_unwind(&mut self) {
+    pub unsafe fn force_unwind(&mut self) {
         if let State::Running = self.state {
             self.state = State::ForceUnwind;
             let _ = try(|| { let _ = self.resume(); });
@@ -318,7 +318,7 @@ impl<T> Coroutine<T>
 pub struct CoroutineRef<T>
     where T: Send,
 {
-    coro: *mut CoroutineImpl<T>,
+    pub coro: *mut CoroutineImpl<T>,
 }
 
 impl<T> Copy for CoroutineRef<T>
