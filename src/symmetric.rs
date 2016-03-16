@@ -61,7 +61,6 @@ impl<T> Coors<T> where
         arg
     }
 
-    // TODO: Remove stop?
     pub fn stop(&mut self, data: T) {
         self.next = -1;
         self.coroutines
@@ -281,8 +280,6 @@ mod test {
         assert_eq!(coors.start(0, 500000).unwrap(), 1337);
     }
 
-   // TODO: select next coroutine by passing NEXT 
-
     #[test]
     fn test_symmetric_round_robin() {
         let mut coors = Coors::new();
@@ -332,7 +329,6 @@ mod test {
         coroutines.push(coro_2);
         coors.set_coroutines(coroutines);
  
-        // TODO: use first/next
         assert_eq!(coors.start(FIRST, (500000, 43)).unwrap(), (1337, 23));
     }
 }
