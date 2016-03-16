@@ -299,8 +299,16 @@ mod test {
             }
         });
 
+        let coro_3 = Coroutine::spawn(|arg| {
+            println!("{:?}", arg.unwrap());
+            for i in 8..12 { 
+                coors.yield_to(NEXT, i).unwrap();
+            }
+        });
+
         coroutines.push(coro_1);
         coroutines.push(coro_2);
+        coroutines.push(coro_3);
         coors.set_coroutines(coroutines);
  
         assert_eq!(coors.start(FIRST, 500000).unwrap(), 1337);
