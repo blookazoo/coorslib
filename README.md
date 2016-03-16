@@ -49,6 +49,14 @@ back
 returning
 ```
 
+# Design
+
+* Proposal Doc
+    - https://docs.google.com/document/d/1TXuSlQulXi8vtj9NSieBoqn_u-wH5uQD13s_K1IHiLA/edit
+
+* Design Doc
+    - https://docs.google.com/document/d/1Ta6HjMTkSflgFzMnhEA-CMSXP8k1kr65Jow1Yr5ysZY/edit
+
 # Installation
 
 * Download Coorslib
