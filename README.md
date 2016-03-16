@@ -49,13 +49,19 @@ back
 returning
 ```
 
-# Design
+# Docs
 
 * Proposal Doc
     - https://docs.google.com/document/d/1TXuSlQulXi8vtj9NSieBoqn_u-wH5uQD13s_K1IHiLA/edit
 
 * Design Doc
     - https://docs.google.com/document/d/1Ta6HjMTkSflgFzMnhEA-CMSXP8k1kr65Jow1Yr5ysZY/edit
+
+* Powerpoint/Poster
+    - in the root directory (coorslib.pptx)
+
+* Video Demonstration
+    - in the root directory (coorslib-demo.ogv)
 
 # Installation
 
