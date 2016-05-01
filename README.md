@@ -2,6 +2,11 @@
 
 Symmetric coroutine library in Rust
 
+```
+    Artem Minyaylov
+    Dylan GAGE Johnson
+    Kevin Chang
+```
 ```toml
 [dependencies.coorslib]
 git = "https://github.com/artemvm/coorslib.git"
